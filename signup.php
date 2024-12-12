@@ -19,7 +19,11 @@ session_start();
 
 		if(!empty($name) && !empty($email) && !empty($phone) && !empty($password) && !is_numeric($name))
 		{
-			$member_id = random_num(20);
+			// Get the last member ID and increment it
+			$query_last_id = "SELECT MAX(CAST(member_id AS UNSIGNED)) AS last_id FROM member";
+			$result = $con->query($query_last_id);
+			$row = $result->fetch_assoc();
+			$member_id = $row['last_id'] ? $row['last_id'] + 1 : 1;
 			//hash the password
 			$hashed_password = password_hash($password, PASSWORD_DEFAULT);
 

@@ -36,10 +36,10 @@ session_start();
 					die;
 				}
 			}
-			alert("wrong email or password!");
+			echo "<script>alert('wrong email or password!');</script>";
 		}else
 		{
-			alert("wrong email or password!");
+			echo "<script>alert('Please enter both email and password!');</script>";
 		}
 	}
 
