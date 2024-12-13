@@ -16,7 +16,9 @@ session_start();
 <body>
 
 	<a href="logout.php">Logout</a>
+	<a href="memberpage.php">Member Page</a>
 	<h1>This is the index page</h1>
+	
 
 	<br>
 	Hello, <?php echo $member_data['name']; ?>
