@@ -51,8 +51,8 @@ DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category` (
   `category_id` int(11) NOT NULL,
   `name` varchar(50) DEFAULT NULL,
-  `description` varchar(100) DEFAULT NULL,
   `image_path` varchar(100) DEFAULT NULL,
+  `description` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`category_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -64,7 +64,7 @@ CREATE TABLE `category` (
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
 
-INSERT INTO `category` VALUES (1, 'nice','this is good',NULL);
+INSERT INTO `category` VALUES (1, 'nice',NULL,'good');
 
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -164,6 +164,7 @@ CREATE TABLE `product` (
   `category_id` int(11) NOT NULL,
   `name` varchar(50) DEFAULT NULL,
   `description` varchar(100) DEFAULT NULL,
+  `image_path` varchar(100) DEFAULT NULL,
   `quantity` int(11) DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL,
   PRIMARY KEY (`product_id`),
@@ -177,7 +178,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1, 1,'poop','this is a poop',100,20.00),(2, 1,'shit','not poop but shit',100,30.00);
+INSERT INTO `product` VALUES (1, 1,'poop','this is a poop',NULL,100,20.00),(2, 1,'shit','not poop but shit',NULL,100,30.00);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
