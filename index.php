@@ -31,20 +31,40 @@ try {
 <body>
     <h1>商品列表</h1>
     <div class="container">
-        <?php if (!empty($products)): ?>
-            <?php foreach ($products as $product): ?>
-                <div class="card">
-                    <img src="https://via.placeholder.com/250x150.png?text=Product+Image" alt="<?php echo htmlspecialchars($product['name']); ?>">
-                    <div class="card-body">
-                        <div class="card-title"><?php echo htmlspecialchars($product['name']); ?></div>
-                        <div class="card-description"><?php echo htmlspecialchars($product['description']); ?></div>
-                        <div class="card-price">NTD <?php echo htmlspecialchars(number_format($product['price'], 2)); ?></div>
-                        <a href="product.php?product_id=<?php echo htmlspecialchars($product['product_id']); ?>">查看商品</a>
+        <?php if (!empty($categories)): ?>
+            <?php foreach ($categories as $category): ?>
+                <div class="category">
+                    <!-- 類別介紹照片 -->
+                    <div class="category-header">
+                        <img src="<?php echo htmlspecialchars($category['image']); ?>" 
+                             alt="<?php echo htmlspecialchars($category['name']); ?>" 
+                             class="category-image">
+                        <h2><?php echo htmlspecialchars($category['name']); ?></h2>
+                    </div>
+
+                    <!-- 類別商品清單 -->
+                    <div class="product-list">
+                        <?php if (!empty($category['products'])): ?>
+                            <?php foreach (array_slice($category['products'], 0, 4) as $product): ?>
+                                <div class="card">
+                                    <img src="https://via.placeholder.com/250x150.png?text=Product+Image" 
+                                         alt="<?php echo htmlspecialchars($product['name']); ?>">
+                                    <div class="card-body">
+                                        <div class="card-title"><?php echo htmlspecialchars($product['name']); ?></div>
+                                        <div class="card-description"><?php echo htmlspecialchars($product['description']); ?></div>
+                                        <div class="card-price">NTD <?php echo htmlspecialchars(number_format($product['price'], 2)); ?></div>
+                                        <a href="product.php?product_id=<?php echo htmlspecialchars($product['product_id']); ?>">查看商品</a>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p style="text-align: center;">此類別目前沒有商品。</p>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
-            <p style="text-align: center;">目前沒有商品。</p>
+            <p style="text-align: center;">目前沒有商品分類。</p>
         <?php endif; ?>
     </div>
 </body>
