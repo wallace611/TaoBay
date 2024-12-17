@@ -160,6 +160,7 @@ try {
 
 	<a href="logout.php">Logout</a>
 	<a href="memberpage.php">Member Page</a>
+    <a href="checkout3.php">查看購物車</a>
 	<h1>This is the index page</h1>
 	
 

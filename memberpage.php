@@ -2,7 +2,6 @@
 session_start();
 
 include("connection.php");
-include("functions.php");
 
 // 檢查用戶是否已登入
 if(!isset($_SESSION['member_id'])) {

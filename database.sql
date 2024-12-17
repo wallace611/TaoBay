@@ -26,6 +26,7 @@ CREATE TABLE `cart` (
   `cart_id` int(11) NOT NULL,
   `creation_time` datetime DEFAULT NULL,
   `member_id` int(11) DEFAULT NULL,
+  `is_checkout` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`cart_id`),
   KEY `member_id` (`member_id`),
   CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`)
@@ -79,8 +80,7 @@ DROP TABLE IF EXISTS `contains`;
 CREATE TABLE `contains` (
   `cart_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
-  PRIMARY KEY (`cart_id`,`product_id`),
-  KEY `product_id` (`product_id`),
+  `quantity` int(11) NOT NULL,
   CONSTRAINT `contains_ibfk_1` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`cart_id`),
   CONSTRAINT `contains_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -136,10 +136,10 @@ CREATE TABLE `orders` (
   `amount` decimal(10,2) DEFAULT NULL,
   `delivery_address` varchar(255) DEFAULT NULL,
   `checkout_time` datetime DEFAULT NULL,
-  `cart_id` int(11) DEFAULT NULL,
+  `member_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`order_id`),
-  KEY `cart_id` (`cart_id`),
-  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`cart_id`)
+  KEY `member_id` (`member_id`),
+  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
