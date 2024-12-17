@@ -1,17 +1,5 @@
 <?php
-// 資料庫連線資訊
-$host = 'localhost';
-$dbname = 'database';
-$username = 'root';
-$password = '';
-
-// 建立資料庫連線
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("資料庫連線失敗：" . $e->getMessage());
-}
+include("connection.php");
 
 // 取得商品 ID
 $product_id = $_GET['product_id'] ?? null;
