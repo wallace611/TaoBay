@@ -64,7 +64,7 @@ CREATE TABLE `category` (
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
 
-INSERT INTO `category` VALUES (1, 'nice',NULL,'good');
+INSERT INTO `category` VALUES (1, 'nice',"product1-4.jpg",'good');
 
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -178,7 +178,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1, 1,'poop','this is a poop',NULL,100,20.00),(2, 1,'shit','not poop but shit',NULL,100,30.00);
+INSERT INTO `product` VALUES (1, 1,'poop','this is a poop',"product1-1.jpg",100,20.00),(2, 1,'shit','not poop but shit',"product1-2.jpg",100,30.00);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
