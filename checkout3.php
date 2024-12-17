@@ -2,7 +2,7 @@
 session_start();
 
 // 連接資料庫 
-$conn = new mysqli('localhost', 'root', '', 'shop');
+$conn = new mysqli('localhost', 'root', '', 'database');
 if ($conn->connect_error) {
     die("連接失敗: " . $conn->connect_error);
 }

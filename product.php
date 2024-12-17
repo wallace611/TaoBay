@@ -51,7 +51,8 @@ try {
 </head>
 <body>
     <div class="product-container">
-        <img src="https://via.placeholder.com/600x300.png?text=Product+Image" alt="<?php echo htmlspecialchars($product['name']); ?>" class="product-image">
+    <img src="<?php echo htmlspecialchars($product['image_path'] ?? 'https://via.placeholder.com/250x150.png?text=No+Image'); ?>" 
+    alt="<?php echo htmlspecialchars($product['name']); ?>">
         <div class="product-title"><?php echo htmlspecialchars($product['name']); ?></div>
         <div class="product-description"><?php echo htmlspecialchars($product['description']); ?></div>
         <div class="product-quantity">數量：<?php echo htmlspecialchars($product['quantity']); ?></div>

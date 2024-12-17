@@ -72,29 +72,34 @@ try {
         }
 
         .product-list {
-            display: flex; /* 使用彈性盒子排列商品 */
+            display: flex;
             flex-wrap: wrap; /* 超出時自動換行 */
-            justify-content: flex-start; /* 商品與左邊對齊 */
+            justify-content: center; /* 對齊到中間 */
             gap: 20px; /* 卡片之間的間距 */
             margin-top: 20px; /* 與類別圖片保持適當間距 */
             padding-left: 0; /* 確保與父容器左對齊 */
+            max-width: 1296px; /* 與圖片寬度一致 */
+            margin-left: auto;
+            margin-right: auto; /* 水平置中 */
         }
 
         .card {
-            flex: 0 1 calc(25% - 20px); /* 每行最多顯示4張卡片，間距20px */
-            box-sizing: border-box; /* 確保邊框與內容一起計算寬度 */
-            margin: 0; /* 清除多餘的外距 */
-            text-align: center; /* 卡片內容置中 */
+            flex: 0 0 calc(25% - 20px); /* 4 欄，每個佔 25%，考慮間距 */
+            max-width: 250px; /* 保持卡片的固定大小 */
+            margin: 0;
+            text-align: center;
             border: 1px solid #ddd;
             border-radius: 5px;
-            overflow: hidden; /* 防止內容溢出 */
+            overflow: hidden;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .card img {
-            width: 100%;
-            height: 150px; /* 固定圖片高度 */
+            width: 160px; /* 固定寬度 */
+            height: 160px; /* 固定高度 */
             object-fit: cover; /* 確保圖片比例裁剪合理 */
+            display: block; /* 去除下方空隙 */
+            margin: 0 auto; /* 居中圖片 */
         }
 
         .card-body {
@@ -121,9 +126,9 @@ try {
         }
         .container {
             width: 90%;
-            max-width: 1200px; /* 限制最大寬度 */
-            margin: 0 auto; /* 置中 */
-            padding: 20px 0; /* 上下間距 */
+            max-width: 1296px; /* 與圖片寬度保持一致 */
+            margin: 0 auto;
+            padding: 20px 0;
         }
         .category {
             margin-bottom: 40px; /* 每個類別區塊的間距 */
@@ -168,4 +173,3 @@ try {
     </div>
 </body>
 </html>
-
