@@ -2,17 +2,14 @@
 session_start();
 
 // 連接資料庫 
-$conn = new mysqli('localhost', 'root', '', 'shop');
-if ($conn->connect_error) {
-    die("連接失敗: " . $conn->connect_error);
-}
+include("connection.php");
 
 // 假設購物車 ID 是 1（模擬用，實際可動態獲取）
 $cart_id = 1;
 
 // 檢查 cart_id 否於 cart 表
 $check_cart = "SELECT COUNT(*) AS count FROM cart WHERE cart_id = ?";
-$stmt = $conn->prepare($check_cart);
+$stmt = $con->prepare($check_cart);
 $stmt->bind_param("i", $cart_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -30,7 +27,7 @@ $query = "
     WHERE c.cart_id = ?
 ";
 
-$stmt = $conn->prepare($query);
+$stmt = $con->prepare($query);
 $stmt->bind_param("i", $cart_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -47,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         INSERT INTO orders (order_status, payment_method, amount, delivery_address, checkout_time, cart_id)
         VALUES (?, ?, ?, ?, NOW(), ?)
     ";
-    $stmt = $conn->prepare($insert_order);
+    $stmt = $con->prepare($insert_order);
     $stmt->bind_param("ssdsi", $order_status, $payment_method, $total_amount, $delivery_address, $cart_id);
     $stmt->execute();
 
@@ -55,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $stmt->close();
-$conn->close();
+$con->close();
 ?>
 
 <!DOCTYPE html>
@@ -73,4 +70,4 @@ $conn->close();
 </body>
 </html>
 
-<!-- (必須在使用 $conn 前先定義) -->
+<!-- (必須在使用 $con 前先定義) -->

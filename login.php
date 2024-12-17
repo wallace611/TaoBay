@@ -3,7 +3,6 @@
 session_start();
 
 	include("connection.php");
-	include("functions.php");
 	$error_message = ""; // 初始化錯誤訊息
 	if(isset($_SESSION['member_id'])) {
 		// Redirect to another page, e.g., the homepage

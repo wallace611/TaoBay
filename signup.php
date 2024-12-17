@@ -55,8 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 				die("資料庫錯誤：" . $con->error);
 			}
 			$stmt->bind_param("sssss", $member_id, $name, $email, $phone, $hashed_password);
-
-<<<<<<< HEAD
 			if ($stmt->execute()) {
 				// 註冊成功，重定向到登入頁面
 				header("Location: login.php");
@@ -65,13 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 				echo "無法完成註冊，請稍後再試。";
 				exit;
 			}
-=======
 			header("Location: login.php");
 			die;
-		}else
-		{
-			$error_message = "請輸入正確的資訊！";
->>>>>>> origin/main
 		}
     } else {
         echo "請填寫所有欄位，並確保姓名是有效的文字！";
