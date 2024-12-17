@@ -143,6 +143,7 @@ session_start();
             <a href="signup.php">還沒有帳號？點此註冊</a>
         </form>
     </div>
+    
 	<script>
         // 使用 PHP 傳遞的錯誤訊息
         const errorMessage = "<?php echo $error_message; ?>";

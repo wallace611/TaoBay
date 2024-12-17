@@ -166,7 +166,7 @@ CREATE TABLE `product` (
   `description` varchar(100) DEFAULT NULL,
   `image_path` varchar(100) DEFAULT NULL,
   `quantity` int(11) DEFAULT NULL,
-  `price` decimal(10,2) DEFAULT NULL,
+  `price` decimal(10) DEFAULT NULL,
   PRIMARY KEY (`product_id`),
   FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

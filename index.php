@@ -64,8 +64,57 @@ try {
             box-sizing: border-box; /* 確保所有元素不會多出邊框或間距 */
         }
 
-        body, html {
+        html, body {
+            margin: 0; /* 移除任何預設邊距 */
+            padding: 0; /* 移除任何預設內距 */
             width: 100%;
+            height: 100%;
+        }
+
+        header {
+            background-color: #85a3e0;
+            color: white;
+            padding: 17px 20px;
+            display: flex; /* 使用 flexbox 布局 */
+            justify-content: space-between; /* 左右分布 */
+            align-items: center; /* 垂直居中 */
+        }
+
+        .header-links {
+            display: flex; /* 设置水平排列 */
+            gap: 15px; /* 图标之间的间距 */
+        }
+
+        .header-links a img {
+            width: 35px; /* 图标宽度 */
+            height: 35px; /* 图标高度 */
+            object-fit: contain; /* 确保图标比例 */
+            cursor: pointer; /* 鼠标悬停显示手型 */
+            transition: transform 0.3s; /* 添加动态效果 */
+        }
+
+        .header-links a img:hover {
+            transform: scale(1.1); /* 鼠标悬停放大效果 */
+        }
+        .welcome-message {
+            font-size: 16px;
+            position: absolute; /* 绝对定位 */
+            right: 20px; /* 靠右距离 */
+            top: 80px; /* 靠上距离 */
+            white-space: nowrap; /* 防止换行 */
+        }
+
+        footer {
+            background-color: #85a3e0;
+            color: white;
+            text-align: center;
+            padding: 12px 0;
+            width: 100%; /* 確保滿版 */
+            position: fixed; /* 貼合底部 */
+            bottom: 0;
+            left: 0;
+        }
+        header h1 {
             margin: 0;
         }
 
@@ -83,12 +132,6 @@ try {
             height: auto; /* 保持圖片比例縮放 */
             display: block; /* 去除圖片下方的空白間隙 */
             margin: 10px auto; /* 加入垂直間距並置中 */
-        }
-
-        .category-header h2 {
-            font-size: 24px;
-            margin-bottom: 10px; /* 與圖片間距 */
-            color: #333; /* 調整文字顏色 */
         }
 
         .product-list {
@@ -153,26 +196,45 @@ try {
         .category {
             margin-bottom: 40px; /* 每個類別區塊的間距 */
         }
+        /*footer {
+            background-color: #85a3e0;
+            color: white;
+            text-align: center;
+            padding: 3px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }*/
 
     </style>
 </head>
 <body>
+<header>
+    <h1>TaoBay</h1>
+    <div class="header-links">
+        <a href="checkout3.php">
+            <img src="cart.png" alt="Shopping Cart" title="Shopping Cart">
+        </a>
+        <a href="memberpage.php">
+            <img src="person.png" alt="Member Page" title="Member Page">
+        </a>
+        <a href="logout.php">
+            <img src="logout.png" alt="Logout" title="Logout">
+        </a>
+    </div>
+</header>
 
-	<a href="logout.php">Logout</a>
-	<a href="memberpage.php">Member Page</a>
-    <a href="checkout3.php">查看購物車</a>
-	<h1>This is the index page</h1>
 	
-
 	<br>
-	Hello, <?php echo $member_data['name']; ?>
+	<div class="welcome-message">
+        Hello, <?php echo htmlspecialchars($member_data['name']); ?>
+    </div>
     <h1>商品列表</h1>
     <div class="container">
         <?php if (!empty($categories)): ?>
             <?php foreach ($categories as $category): ?>
                 <div class="category">
                     <div class="category-header">
-                        <h2><?php echo htmlspecialchars($category['name']); ?></h2>
                         <img src="<?php echo htmlspecialchars($category['image_path'] ?? 'https://via.placeholder.com/250x150.png?text=No+Image'); ?>" 
                              alt="<?php echo htmlspecialchars($category['name']); ?>">
                     </div>
@@ -200,5 +262,9 @@ try {
             <p style="text-align: center;">目前沒有商品分類。</p>
         <?php endif; ?>
     </div>
+    <footer>
+        <p>&copy; 2024 TaoBay</p>
+    </footer>
+
 </body>
 </html>

@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     if (!empty($name) && !empty($email) && !empty($phone) && !empty($password) && !is_numeric($name)) {
         // 檢查 email 格式是否有效
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            echo "請輸入有效的電子郵件地址！";
+            echo "<script>alert('請輸入有效的電子郵件地址！');</script>";
             exit;
         }
 
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 		$stmt->execute();
 		$stmt->store_result();
 		if ($stmt->num_rows > 0) {
-			echo "該電子郵件地址已被註冊！";
+			echo "<script>alert('該電子郵件地址已被註冊！');</script>";
 		} else {
 			$query = "INSERT INTO member (member_id, name, email, phone, password) VALUES (?, ?, ?, ?, ?)";
 			$stmt = $con->prepare($query);
@@ -59,14 +59,14 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 				header("Location: login.php");
 				exit;
 			} else {
-				echo "無法完成註冊，請稍後再試。";
+				echo "<script>alert('無法完成註冊，請稍後再試。');</script>";
 				exit;
 			}
 			header("Location: login.php");
 			die;
 		}
     } else {
-        echo "請填寫所有欄位，並確保姓名是有效的文字！";
+        echo "<script>alert('請填寫所有欄位，並確保姓名是有效的文字！');</script>";
     }
 }
 ?>
