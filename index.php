@@ -32,9 +32,19 @@ session_start();
 
 	$member_data = check_login($con);
 
+// 讀取分類和商品
 try {
-    $stmt = $pdo->query("SELECT * FROM product");
-    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // 查詢所有分類
+    $categoryStmt = $pdo->query("SELECT * FROM category");
+    $categories = $categoryStmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // 查詢每個分類的商品
+    foreach ($categories as &$category) {
+        $categoryId = $category['category_id'];
+        $productStmt = $pdo->prepare("SELECT * FROM product WHERE category_id = ?");
+        $productStmt->execute([$categoryId]);
+        $category['products'] = $productStmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 } catch (PDOException $e) {
     die("讀取資料失敗：" . $e->getMessage());
 }
@@ -47,6 +57,104 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>商品列表</title>
     <link href="style.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box; /* 確保所有元素不會多出邊框或間距 */
+        }
+
+        body, html {
+            width: 100%;
+            margin: 0;
+        }
+
+        .category-header {
+            text-align: center; /* 置中文字與內容 */
+            margin: 0 auto; /* 水平置中 */
+            max-width: 100%; /* 確保不超出父容器寬度 */
+            overflow: hidden; /* 防止超出內容 */
+        }
+
+        .category-header img {
+            width: 1296px; /* 保持圖片原始寬度 */
+            height: 648px; /* 保持圖片原始高度 */
+            max-width: 80%; /* 確保圖片在小螢幕上不超出視窗寬度 */
+            height: auto; /* 保持圖片比例縮放 */
+            display: block; /* 去除圖片下方的空白間隙 */
+            margin: 10px auto; /* 加入垂直間距並置中 */
+        }
+
+        .category-header h2 {
+            font-size: 24px;
+            margin-bottom: 10px; /* 與圖片間距 */
+            color: #333; /* 調整文字顏色 */
+        }
+
+        .product-list {
+            display: flex;
+            flex-wrap: wrap; /* 超出時自動換行 */
+            justify-content: center; /* 對齊到中間 */
+            gap: 20px; /* 卡片之間的間距 */
+            margin-top: 20px; /* 與類別圖片保持適當間距 */
+            padding-left: 0; /* 確保與父容器左對齊 */
+            max-width: 1296px; /* 與圖片寬度一致 */
+            margin-left: auto;
+            margin-right: auto; /* 水平置中 */
+        }
+
+        .card {
+            flex: 0 0 calc(25% - 20px); /* 4 欄，每個佔 25%，考慮間距 */
+            max-width: 250px; /* 保持卡片的固定大小 */
+            margin: 0;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card img {
+            width: 160px; /* 固定寬度 */
+            height: 160px; /* 固定高度 */
+            object-fit: cover; /* 確保圖片比例裁剪合理 */
+            display: block; /* 去除下方空隙 */
+            margin: 0 auto; /* 居中圖片 */
+        }
+
+        .card-body {
+            padding: 10px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .card-description {
+            font-size: 14px;
+            color: #555;
+            margin: 5px 0 10px 0;
+        }
+
+        .card-price {
+            font-size: 16px;
+            color: #e63946;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .container {
+            width: 90%;
+            max-width: 1296px; /* 與圖片寬度保持一致 */
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+        .category {
+            margin-bottom: 40px; /* 每個類別區塊的間距 */
+        }
+
+    </style>
 </head>
 <body>
 
@@ -59,20 +167,36 @@ try {
 	Hello, <?php echo $member_data['name']; ?>
     <h1>商品列表</h1>
     <div class="container">
-        <?php if (!empty($products)): ?>
-            <?php foreach ($products as $product): ?>
-                <div class="card">
-                    <img src="https://via.placeholder.com/250x150.png?text=Product+Image" alt="<?php echo htmlspecialchars($product['name']); ?>">
-                    <div class="card-body">
-                        <div class="card-title"><?php echo htmlspecialchars($product['name']); ?></div>
-                        <div class="card-description"><?php echo htmlspecialchars($product['description']); ?></div>
-                        <div class="card-price">NTD <?php echo htmlspecialchars(number_format($product['price'], 2)); ?></div>
-                        <a href="product.php?product_id=<?php echo htmlspecialchars($product['product_id']); ?>">查看商品</a>
+        <?php if (!empty($categories)): ?>
+            <?php foreach ($categories as $category): ?>
+                <div class="category">
+                    <div class="category-header">
+                        <h2><?php echo htmlspecialchars($category['name']); ?></h2>
+                        <img src="<?php echo htmlspecialchars($category['image_path'] ?? 'https://via.placeholder.com/250x150.png?text=No+Image'); ?>" 
+                             alt="<?php echo htmlspecialchars($category['name']); ?>">
+                    </div>
+                    <div class="product-list">
+                        <?php if (!empty($category['products'])): ?>
+                            <?php foreach (array_slice($category['products'], 0, 4) as $product): ?>
+                                <div class="card">
+                                    <img src="<?php echo htmlspecialchars($product['image_path'] ?? 'https://via.placeholder.com/250x150.png?text=Product+Image'); ?>" 
+                                         alt="<?php echo htmlspecialchars($product['name']); ?>">
+                                    <div class="card-body">
+                                        <div class="card-title"><?php echo htmlspecialchars($product['name']); ?></div>
+                                        <div class="card-description"><?php echo htmlspecialchars($product['description']); ?></div>
+                                        <div class="card-price">NTD <?php echo htmlspecialchars(number_format($product['price'], 2)); ?></div>
+                                        <a href="product.php?product_id=<?php echo htmlspecialchars($product['product_id']); ?>">查看商品</a>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p style="text-align: center;">此類別目前沒有商品。</p>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
-            <p style="text-align: center;">目前沒有商品。</p>
+            <p style="text-align: center;">目前沒有商品分類。</p>
         <?php endif; ?>
     </div>
 </body>

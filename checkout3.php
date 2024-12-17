@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// 連接資料庫 
 include("connection.php");
 
 // 假設購物車 ID 是 1（模擬用，實際可動態獲取）
@@ -9,6 +8,7 @@ $cart_id = 1;
 
 // 檢查 cart_id 否於 cart 表
 $check_cart = "SELECT COUNT(*) AS count FROM cart WHERE cart_id = ?";
+
 $stmt = $con->prepare($check_cart);
 $stmt->bind_param("i", $cart_id);
 $stmt->execute();
@@ -44,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         INSERT INTO orders (order_status, payment_method, amount, delivery_address, checkout_time, cart_id)
         VALUES (?, ?, ?, ?, NOW(), ?)
     ";
+
     $stmt = $con->prepare($insert_order);
     $stmt->bind_param("ssdsi", $order_status, $payment_method, $total_amount, $delivery_address, $cart_id);
     $stmt->execute();
@@ -70,4 +71,3 @@ $con->close();
 </body>
 </html>
 
-<!-- (必須在使用 $con 前先定義) -->
