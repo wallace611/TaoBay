@@ -12,7 +12,6 @@ try {
     // Query categories
     $categoryStmt = $pdo->query("SELECT * FROM category");
     $categories = $categoryStmt->fetchAll(PDO::FETCH_ASSOC);
-
     // Query products for each category
     foreach ($categories as &$category) {
         $categoryId = $category['category_id'];
@@ -31,20 +30,30 @@ $query = "
     ORDER BY c.category_id
 ";
 $stmt = $pdo->query($query);
-$categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+//$categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Organize products by category
 $categoryProducts = [];
 foreach ($categories as $category) {
-    $categoryProducts[$category['category_id']]['name'] = $category['name'];
-    $categoryProducts[$category['category_id']]['image_path'] = $category['image_path'];
-    $categoryProducts[$category['category_id']]['products'][] = [
-        'product_id' => $category['product_id'],
-        'name' => $category['name'],
-        'description' => $category['description'],
-        'price' => $category['price'],
-        'image_path' => $category['image_path']
-    ];
+    $categoryId = $category['category_id'];
+    $categoryProducts[$categoryId]['name'] = $category['name'];
+    $categoryProducts[$categoryId]['image_path'] = $category['image_path'];
+
+    // 檢查是否存在產品
+    if (!empty($category['products']) && is_array($category['products'])) {
+        foreach ($category['products'] as $product) {
+            $categoryProducts[$categoryId]['products'][] = [
+                'product_id' => $product['product_id'],
+                'name' => $product['name'],
+                'description' => $product['description'],
+                'price' => $product['price'],
+                'image_path' => $product['image_path']
+            ];
+        }
+    } else {
+        // 若沒有產品，則初始化為空陣列
+        $categoryProducts[$categoryId]['products'] = [];
+    }
 }
 
 ?>
