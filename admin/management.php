@@ -177,42 +177,255 @@ $products = $pdo->query("SELECT p.*, c.name AS category_name FROM product p LEFT
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>商品管理</title>
+    <link href="style.css" rel="stylesheet">
+    <style>
+        /* 通用樣式 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            padding-top: 50px;
+            background-color: white;
+            color: #333;
+        }
+
+        /*header {
+            background-color: #85a3e0;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        header a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 14px;
+            margin-left: 20px;
+        }
+
+        header a:hover {
+            text-decoration: underline;
+        }*/
+
+        main {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            color: #4976d0;
+            margin-bottom: 10px;
+            text-align:center;
+        }
+
+        form {
+            background-color: white;
+            margin: 0 auto;
+            width:60%;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        form label {
+            display: flex; /* 使用 Flexbox */
+            align-items: center; /* 垂直置中 */
+            margin-bottom: 10px;
+        }
+
+        form label input, 
+        form label select, 
+        form label textarea {
+            flex-grow: 1; /* 輸入框自動占滿剩餘空間 */
+            margin-left: 10px; /* 與文字間距 */
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: auto; /* 根據需要調整寬度 */
+        }
+
+        form button {
+            background-color: #85a3e0;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #4976d0;
+        }
+
+        /* 表格樣式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        table th, table td {
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+            color: #333;
+            font-weight: bold;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        img {
+            max-width: 50px;
+            height: auto;
+        }
+
+        button {
+            padding: 5px 10px;
+            width:80px;
+            height:40px;
+            font-size: 16px; /* 增大字體 */
+            font-weight: bold; /* 文字粗體 */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #4976d0;
+            color: white;
+        }
+        .add {
+            padding: 5px 10px;
+            width:120px;
+            height:40px;
+            font-size: 16px; /* 增大字體 */
+            font-weight: bold; /* 文字粗體 */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .add:hover {
+            background-color: #4976d0;
+            color: white;
+        }
+        footer {
+            text-align: center;
+            background-color: #85a3e0;
+            color: white;
+            padding: 0px 0;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+        header {
+            background-color: #85a3e0;
+            color: white;
+            padding: 12px 20px;
+            width: 100%; /* 確保滿版 */
+            height: 70px;
+            position: fixed; /* 固定在頁面頂部 */
+            top: 0;
+            left: 0;
+            z-index: 1000; /* 確保在其他元素上方 */
+            display: flex; /* 使用 flexbox 布局 */
+            justify-content: space-between; /* 左右分布 */
+            align-items: center; /* 垂直居中 */
+            box-sizing: border-box; /* 包含 padding */
+        }
+
+        .header-links {
+            display: flex; /* 設定水平排列 */
+            gap: 15px; /* 圖標間距 */
+            max-width: 100%; /* 限制寬度以避免超出畫面 */
+            overflow: hidden; /* 防止溢出 */
+            flex-wrap: wrap; /* 若空間不足則換行 */
+        }
+
+        .header-links a img {
+            width: 35px; /* 圖標寬度 */
+            height: 35px; /* 圖標高度 */
+            object-fit: contain; /* 確保圖標比例 */
+            cursor: pointer; /* 鼠標樣式 */
+            transition: transform 0.3s; /* 動態效果 */
+        }
+
+        .header-links a img:hover {
+            transform: scale(1.1); /* 鼠标悬停放大效果 */
+        }
+    </style> 
 </head>
 <body>
-<header>
-    <h1>商品管理</h1>
-    <a href="../index.php">返回首頁</a>
-</header>
+    <header>
+        <h1>TaoBay</h1>
+        <div class="header-links">
+            <a href="../product/checkout3.php">
+                <img src="../image/cart.png" alt="Shopping Cart" title="Shopping Cart">
+            </a>
+            <a href="../account/memberpage.php">
+                <img src="../image/person.png" alt="Member Page" title="Member Page">
+            </a>
+            <a href="../account/logout.php">
+                <img src="../image/logout.png" alt="Logout" title="Logout">
+            </a>
+            <a href="../index.php">
+                <img src="../image/home.png" alt="Home" title="Home">
+            </a>
+            <?php if ($isAdmin): ?>
+                <a href="orderpage.php">
+                    <img src="../image/order.png" alt="Order" title="Order">
+                </a>
+            <?php endif; ?>
+        </div>
+    </header>
 <main>
+    <h1>商品管理</h1>
     <h2>新增商品</h2>
     <form method="POST" enctype="multipart/form-data">
         <input type="hidden" name="action" value="add">
         <!-- Product Fields -->
-        <label>名稱: <input type="text" name="name" required></label><br>
-        <label>描述: <input type="text" name="description"></label><br>
+        <label>名稱: <input type="text" name="name" required></label>
+        <label>描述: <input type="text" name="description"></label>
         <label>分類: 
             <select name="category_id">
                 <?php foreach ($categories as $category): ?>
                     <option value="<?php echo $category['category_id']; ?>"><?php echo htmlspecialchars($category['name']); ?></option>
                 <?php endforeach; ?>
             </select>
-        </label><br>
-        <label>價格: <input type="number" name="price" step="0.01" required></label><br>
-        <label>數量: <input type="number" name="quantity" required></label><br>
-        <label>圖片: <input type="file" name="image"></label><br>
-        <button type="submit">新增</button>
+        </label>
+        <label>價格: <input type="number" name="price" step="0.01" required></label>
+        <label>數量: <input type="number" name="quantity" required></label>
+        <label>圖片: <input type="file" name="image"></label>
+        <button type="submit" class="add">新增商品</button>
     </form>
 
     <h2>新增商品類別</h2>
     <form method="POST" enctype="multipart/form-data">
         <input type="hidden" name="action" value="add_category">
-        <label>類別名稱: <input type="text" name="category_name" required></label><br>
-        <label>類別描述: <input type="text" name="category_description"></label><br>
-        <label>類別圖片: <input type="file" name="category_image"></label><br>
-        <button type="submit">新增類別</button>
+        <label>類別名稱: <input type="text" name="category_name" required></label>
+        <label>類別描述: <input type="text" name="category_description"></label>
+        <label>類別圖片: <input type="file" name="category_image"></label>
+        <button type="submit" class="add">新增類別</button>
     </form>
 
-    <h2>商品類別列表</h2>
+    <h2>商品類別列表</h2><br>
     <table border="1">
         <thead>
         <tr>
@@ -238,9 +451,9 @@ $products = $pdo->query("SELECT p.*, c.name AS category_name FROM product p LEFT
             </tr>
         <?php endforeach; ?>
         </tbody>
-    </table>
+    </table><br><br>
 
-    <h2>商品列表</h2>
+    <h2>商品列表</h2><br>
     <table border="1">
         <thead>
         <tr>
@@ -279,7 +492,7 @@ $products = $pdo->query("SELECT p.*, c.name AS category_name FROM product p LEFT
             </tr>
         <?php endforeach; ?>
         </tbody>
-    </table>
+    </table><br><br>
 </main>
 <footer>
     <p>&copy; 2024 TaoBay</p>

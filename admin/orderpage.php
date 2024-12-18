@@ -1,6 +1,6 @@
 <?php
 session_start();
-// 引入資料庫配置
+
 include("../connection.php");
 
 // 檢查是否有登入管理員（例如 session 檢查），如未登入則導向至登入頁
@@ -8,6 +8,8 @@ if (!is_admin($con, $_SESSION['member_id'])) {
     header("Location: ../account/login.php");
     exit;
 }
+
+$is_admin = is_admin($con, $_SESSION['member_id']);
 
 // 從資料庫獲取所有訂單，並且包含商品信息
 try {
@@ -82,9 +84,150 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>訂單管理</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* 通用樣式 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            padding-top: 70px;
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        /* Header 樣式 */
+        header {
+            background-color: #85a3e0;
+            color: white;
+            padding: 12px 20px;
+            width: 100%; /* 確保滿版 */
+            height: 70px;
+            position: fixed; /* 固定在頁面頂部 */
+            top: 0;
+            left: 0;
+            z-index: 1000; /* 確保在其他元素上方 */
+            display: flex; /* 使用 flexbox 布局 */
+            justify-content: space-between; /* 左右分布 */
+            align-items: center; /* 垂直居中 */
+            box-sizing: border-box; /* 包含 padding */
+        }
+
+        .header-links {
+            display: flex; /* 設定水平排列 */
+            gap: 15px; /* 圖標間距 */
+            max-width: 100%; /* 限制寬度以避免超出畫面 */
+            overflow: hidden; /* 防止溢出 */
+            flex-wrap: wrap; /* 若空間不足則換行 */
+        }
+
+        .header-links a img {
+            width: 35px; /* 圖標寬度 */
+            height: 35px; /* 圖標高度 */
+            object-fit: contain; /* 確保圖標比例 */
+            cursor: pointer; /* 鼠標樣式 */
+            transition: transform 0.3s; /* 動態效果 */
+        }
+
+        .header-links a img:hover {
+            transform: scale(1.1); /* 鼠标悬停放大效果 */
+        }
+
+        /* Main 樣式 */
+        main {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            color: #4976d0;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        /* 表格樣式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        table th, table td {
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+            color: #333;
+            font-weight: bold;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        button {
+            padding: 5px 10px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #85a3e0;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #4976d0;
+        }
+
+        /* Footer 樣式 */
+        footer {
+            text-align: center;
+            background-color: #85a3e0;
+            color: white;
+            padding: 0px 0;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+
+    </style>    
 </head>
 <body>
-    <h1>訂單管理頁面</h1>
+<header>
+        <h1>TaoBay</h1>
+        <div class="header-links">
+            <a href="../product/checkout3.php">
+                <img src="../image/cart.png" alt="Shopping Cart" title="Shopping Cart">
+            </a>
+            <a href="../account/memberpage.php">
+                <img src="../image/person.png" alt="Member Page" title="Member Page">
+            </a>
+            <a href="../account/logout.php">
+                <img src="../image/logout.png" alt="Logout" title="Logout">
+            </a>
+            <a href="../index.php">
+                <img src="../image/home.png" alt="Home" title="Home">
+            </a>
+            <?php if ($is_admin): ?>
+                <a href="management.php">
+                    <img src="../image/manage.png" alt="Manage" title="Manage">
+                </a>
+            <?php endif; ?>
+        </div>
+    </header>
+<main>    
+    <h1>訂單管理</h1>
     
     <a href="../index.php">返回首頁</a>
     <table border="1" cellpadding="10">
@@ -116,7 +259,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <!-- 顯示一個按鈕，跳轉到 cartorder.php -->
                             <form method="GET" action="../product/cartorder.php" style="display:inline;">
                                 <input type="hidden" name="order_id" value="<?php echo htmlspecialchars($order['order_id']); ?>">
-                                <button type="submit" name="view_order">查看此訂單商品</button>
+                                <button type="submit" name="view_order">查看此訂單</button>
                             </form>
                         </td>
                         <td>
@@ -147,5 +290,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
         </tbody>
     </table>
+</main>
+<footer>
+    <p>&copy; 2024 TaoBay</p>
+</footer>
 </body>
 </html>

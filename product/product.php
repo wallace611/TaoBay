@@ -1,6 +1,12 @@
 <?php
 session_start();
+<<<<<<< HEAD:product/product.php
 include("../connection.php");
+=======
+include("connection.php");
+$member_data = check_login($con);
+$is_admin = is_admin($con, $member_data['member_id']);
+>>>>>>> 00d6fb1b1727055cd59e286990a8b26f48f96f84:product.php
 
 // 取得商品 ID
 $product_id = $_GET['product_id'] ?? null;
@@ -100,44 +106,225 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
     <title>商品詳細資訊</title>
     <link href="style.css" rel="stylesheet">
     <style>
-        .product-container img {
-            width: 250px; /* 固定圖片寬度 */
-            height: 250px; /* 固定圖片高度 */
-            object-fit: cover; /* 確保圖片比例正常，不變形 */
-            border: 1px solid #ddd; /* 可選：增加邊框 */
-            border-radius: 5px; /* 可選：讓圖片有圓角 */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 可選：增加陰影效果 */
-            display: block;
-            margin: 0 auto; /* 居中 */
+        /* General styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
         }
 
+        a {
+            text-decoration: none;
+            color: #007BFF;
+        }
+
+
+        /* Product container styles */
         .product-container {
-            text-align: center; /* 圖片與文字居中 */
-            margin: 20px auto; /* 增加外邊距 */
-            max-width: 600px; /* 限制容器寬度 */
+            width: 90%;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
 
-        .product-container .product-title {
-            font-size: 24px;
+        .product-container img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .product-title {
+            font-size: 1.5em;
             font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .product-description {
+            margin-bottom: 10px;
+            font-size: 1em;
+            color: #555;
+        }
+
+        .product-quantity,
+        .product-price {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        form {
             margin-top: 10px;
         }
 
-        .product-container .product-description,
-        .product-container .product-quantity,
-        .product-container .product-price {
-            margin: 10px 0;
+        form input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            margin-right: 10px;
         }
 
-        .random-products .card img {
-            width: 200px; /* 固定寬度 */
-            height: 200px; /* 固定高度 */
-            object-fit: cover; /* 確保圖片比例正常，不變形 */
+        .add-to-cart-btn {
+            display: inline-block;
+            background-color: #4976d0;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-to-cart-btn:hover {
+            background-color: #85a3e0;
+        }
+
+        /* Random products section */
+        .random-products {
+            margin: 20px auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        .random-products-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        /* 推薦商品的按鈕樣式 */
+        .random-products .card-body a {
+            display: inline-block;
+            background-color: #4976d0; /* 按鈕背景色 */
+            color: #fff; /* 按鈕文字顏色 */
+            padding: 8px 16px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1em;
+            transition: background-color 0.3s, color 0.3s;
+            text-decoration: none;
+        }
+
+        .random-products .card-body a:hover {
+            background-color: #85a3e0; /* 懸停時的背景色 */
+            color: #e6e6e6; /* 懸停時的文字顏色 */
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .card {
+            width: 200px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .card img {
+            width: 100%;
+            height: auto;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        .card-title {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .card-price {
+            color: red;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        header {
+            background-color: #85a3e0;
+            color: white;
+            padding: 17px 20px;
+            display: flex; /* 使用 flexbox 布局 */
+            justify-content: space-between; /* 左右分布 */
+            align-items: center; /* 垂直居中 */
+        }
+
+        .header-links {
+            display: flex; /* 设置水平排列 */
+            gap: 15px; /* 图标之间的间距 */
+        }
+
+        .header-links a img {
+            width: 35px; /* 图标宽度 */
+            height: 35px; /* 图标高度 */
+            object-fit: contain; /* 确保图标比例 */
+            cursor: pointer; /* 鼠标悬停显示手型 */
+            transition: transform 0.3s; /* 添加动态效果 */
+        }
+
+        .header-links a img:hover {
+            transform: scale(1.1); /* 鼠标悬停放大效果 */
+        }
+        footer {
+            background-color: #85a3e0;
+            color: white;
+            text-align: center;
+            padding: 0px 0;
+            width: 100%; /* 確保滿版 */
+            position: fixed; /* 貼合底部 */
+            bottom: 0;
+            left: 0;
+        }
+        header h1 {
+            margin: 0;
         }
     </style>
-
 </head>
 <body>
+<header>
+        <h1>TaoBay</h1>
+        <div class="header-links">
+            <a href="checkout3.php">
+                <img src="cart.png" alt="Shopping Cart" title="Shopping Cart">
+            </a>
+            <a href="memberpage.php">
+                <img src="person.png" alt="Member Page" title="Member Page">
+            </a>
+            <a href="logout.php">
+                <img src="logout.png" alt="Logout" title="Logout">
+            </a>
+            <a href="index.php">
+                <img src="home.png" alt="Home" title="Home">
+            </a>
+            <?php if ($is_admin): ?>
+                <a href="management.php">
+                    <img src="manage.png" alt="Manage" title="Manage">
+                </a>
+                <a href="orderpage.php">
+                    <img src="order.png" alt="Order" title="Order">
+                </a>
+            <?php endif; ?>
+        </div>
+    </header>
     <div class="product-container">
         <img src="<?php echo htmlspecialchars('../' . ($product['image_path'] ?? 'images/default.png')); ?>" 
         alt="<?php echo htmlspecialchars($product['name']); ?>">
@@ -149,9 +336,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
         <form method="POST" action="">
             <label for="quantity">數量:</label>
             <input type="number" name="quantity" id="quantity" value="1" min="1" required>
+            <br>
+            <br>
             <button type="submit" name="add_to_cart" class="add-to-cart-btn">新增至購物車</button>
         </form>
-        
         <br>
         <a href="../index.php" class="add-to-cart-btn">返回主頁面</a>
         <a href="checkout3.php" class="add-to-cart-btn">查看購物車</a>
@@ -173,5 +361,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
             <?php endforeach; ?>
         </div>
     </div>
+    <footer>
+        <p>&copy; 2024 TaoBay</p>
+    </footer>
 </body>
 </html>

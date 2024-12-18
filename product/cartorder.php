@@ -2,6 +2,11 @@
 session_start();
 // 引入資料庫配置
 include("../connection.php");
+// =======
+// include("connection.php");
+// $member_data = check_login($con);
+// $is_admin = is_admin($con, $member_data['member_id']);
+// >>>>>>> 00d6fb1b1727055cd59e286990a8b26f48f96f84:cartorder.php
 
 // 檢查是否有登入用戶（例如 session 檢查），如未登入則導向至登入頁
 if (!isset($_SESSION['member_id'])) {
@@ -32,8 +37,176 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>訂單管理</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0 auto;
+            width: 80%;
+            padding-top: 70px;
+            background-color: white; /* 背景色 */
+            color: #333; /* 字體顏色 */
+        }
+
+        h2, h3 {
+            color: #4976d0; /* 標題顏色 */
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: #fff;
+            border-radius: 5px; /* 圓角效果 */
+            overflow: hidden; /* 避免內容溢出 */
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* 添加陰影 */
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f9f9f9;
+            color: black;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        button {
+            background-color: #4976d0;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        button:hover {
+            background-color: #85a3e0;
+        }
+
+        img {
+            max-width: 100px;
+            height: auto;
+        }
+
+        p {
+            font-weight: bold;
+            color: #555;
+        }
+
+        footer {
+            background-color: #85a3e0;
+            color: white;
+            text-align: center;
+            padding: 0px 0;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            font-size: 14px;
+        }
+        .ff{
+            color: white;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-top: 30px;
+            color: #4976d0;
+        }
+
+        h3 {
+            margin-top: 20px;
+        }
+        header {
+            background-color: #85a3e0;
+            color: white;
+            padding: 12px 20px;
+            width: 100%; /* 確保滿版 */
+            height: 70px;
+            position: fixed; /* 固定在頁面頂部 */
+            top: 0;
+            left: 0;
+            z-index: 1000; /* 確保在其他元素上方 */
+            display: flex; /* 使用 flexbox 布局 */
+            justify-content: space-between; /* 左右分布 */
+            align-items: center; /* 垂直居中 */
+            box-sizing: border-box; /* 包含 padding */
+        }
+
+        .header-links {
+            display: flex; /* 設定水平排列 */
+            gap: 0px; /* 圖標間距 */
+            max-width: 100%; /* 限制寬度以避免超出畫面 */
+            overflow: hidden; /* 防止溢出 */
+            flex-wrap: wrap; /* 若空間不足則換行 */
+        }
+
+        .header-links a img {
+            width: 35px; /* 圖標寬度 */
+            height: 35px; /* 圖標高度 */
+            object-fit: contain; /* 確保圖標比例 */
+            cursor: pointer; /* 鼠標樣式 */
+            transition: transform 0.3s; /* 動態效果 */
+        }
+
+        .header-links a img:hover {
+            transform: scale(1.1); /* 鼠标悬停放大效果 */
+        }
+
+    </style>
 </head>
 <body>
+    <header>
+        <h1>TaoBay</h1>
+        <div class="header-links">
+            <a href="checkout3.php">
+                <img src="cart.png" alt="Shopping Cart" title="Shopping Cart">
+            </a>
+            <a href="memberpage.php">
+                <img src="person.png" alt="Member Page" title="Member Page">
+            </a>
+            <a href="logout.php">
+                <img src="logout.png" alt="Logout" title="Logout">
+            </a>
+            <a href="index.php">
+                <img src="home.png" alt="Home" title="Home">
+            </a>
+            <?php if ($is_admin): ?>
+                <a href="management.php">
+                    <img src="manage.png" alt="Manage" title="Manage">
+                </a>
+                <a href="orderpage.php">
+                    <img src="order.png" alt="Order" title="Order">
+                </a>
+            <?php endif; ?>
+        </div>
+    </header>
     <h1>我的訂單</h1>
     
     <a href="../index.php">返回首頁</a>
@@ -100,5 +273,8 @@ try {
     <?php else: ?>
         <p>目前沒有任何訂單。</p>
     <?php endif; ?>
+    <footer>
+        <p class="ff">&copy; 2024 TaoBay</p>
+    </footer>
 </body>
 </html>
