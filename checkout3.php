@@ -1,7 +1,8 @@
 <?php
 session_start();
 include("connection.php");
-
+$member_data = check_login($con);
+$is_admin = is_admin($con, $member_data['member_id']);
 // 確保會員已登入
 if (!isset($_SESSION['member_id'])) {
     die("錯誤：未登入會員，無法進行結帳。");
@@ -193,10 +194,168 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html>
 <head>
     <title>結帳頁面</title>
+    <style>
+        html, body {
+            height: 100%; /* 設置為全高 */
+            margin: 0;
+            overflow-y: auto; /* 確保可以垂直滾動 */
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0 auto;
+            width: 80%;
+            padding-top: 70px;
+        }
+        h2 {
+            color: #333;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: #fff;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        button {
+            background-color: #4976d0;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        button:hover {
+            background-color: #85a3e0;
+        }
+        form {
+            margin: 0;
+        }
+        input[type="text"], select {
+            padding: 5px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            width: 100%;
+            max-width: 300px;
+        }
+        p {
+            font-weight: bold;
+            color: #555;
+        }
+        /* 大按鈕樣式 */
+        .large-button {
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color:rgb(246, 34, 34);
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .large-button:hover {
+            background-color:rgb(240, 77, 77);
+        }
+        header {
+            background-color: #85a3e0;
+            color: white;
+            padding: 12px 20px;
+            width: 100%; /* 確保滿版 */
+            position: fixed; /* 固定在頁面頂部 */
+            top: 0;
+            left: 0;
+            z-index: 1000; /* 確保在其他元素上方 */
+            display: flex; /* 使用 flexbox 布局 */
+            justify-content: space-between; /* 左右分布 */
+            align-items: center; /* 垂直居中 */
+            box-sizing: border-box; /* 包含 padding */
+        }
+
+        .header-links {
+            display: flex; /* 設定水平排列 */
+            gap: 15px; /* 圖標間距 */
+            max-width: 100%; /* 限制寬度以避免超出畫面 */
+            overflow: hidden; /* 防止溢出 */
+            flex-wrap: wrap; /* 若空間不足則換行 */
+        }
+
+        .header-links a img {
+            width: 35px; /* 圖標寬度 */
+            height: 35px; /* 圖標高度 */
+            object-fit: contain; /* 確保圖標比例 */
+            cursor: pointer; /* 鼠標樣式 */
+            transition: transform 0.3s; /* 動態效果 */
+        }
+
+        .header-links a img:hover {
+            transform: scale(1.1); /* 鼠标悬停放大效果 */
+        }
+        footer {
+            background-color: #85a3e0;
+            color: white;
+            text-align: center;
+            padding: 0px 0;
+            width: 100%; /* 確保滿版 */
+            position: fixed; /* 貼合底部 */
+            bottom: 0;
+            left: 0;
+        }
+        .ff{
+            color: white;
+        }
+        header h1 {
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
-    <h1>結帳頁面</h1>
-    <a href="index.php">回主頁面</a>
+    <header>
+        <h1>TaoBay</h1>
+        <div class="header-links">
+            <a href="memberpage.php">
+                <img src="person.png" alt="Member Page" title="Member Page">
+            </a>
+            <a href="logout.php">
+                <img src="logout.png" alt="Logout" title="Logout">
+            </a>
+            <a href="index.php">
+                <img src="home.png" alt="Home" title="Home">
+            </a>
+            <?php if ($is_admin): ?>
+                <a href="management.php">
+                    <img src="manage.png" alt="Manage" title="Manage">
+                </a>
+                <a href="orderpage.php">
+                    <img src="order.png" alt="Order" title="Order">
+                </a>
+            <?php endif; ?>
+        </div>
+    </header>
     <h2>購物車商品</h2>
     <table border="1">
         <tr>
@@ -231,8 +390,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <option value="貨到付款">貨到付款</option>
             <option value="銀行轉帳">銀行轉帳</option>
         </select>
-    </label><br>
-    <button type="submit" name="submit_order">提交訂單</button>
+    </label><br><br>
+    <button type="submit" name="submit_order"  class="large-button">結帳</button>
 </form>
 
 <h2>近期訂單</h2>
@@ -269,6 +428,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </tr>
     <?php endif; ?>
 </table>
+    <footer>
+        <p class="ff">&copy; 2024 TaoBay</p>
+    </footer>
 
 
 </body>

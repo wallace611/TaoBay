@@ -34,7 +34,7 @@ $stmt = $pdo->query($query);
 
 // Organize products by category
 $categoryProducts = [];
-foreach ($categories as $category) {
+foreach ($categories as &$category) {
     $categoryId = $category['category_id'];
     $categoryProducts[$categoryId]['name'] = $category['name'];
     $categoryProducts[$categoryId]['image_path'] = $category['image_path'];
@@ -176,7 +176,21 @@ foreach ($categories as $category) {
         .card-body {
             padding: 10px;
         }
+        .card-body a {
+            display: inline-block;
+            background-color: #4976d0; /* 按鈕背景色 */
+            color: #fff; /* 按鈕文字顏色 */
+            padding: 8px 16px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1em;
+            transition: background-color 0.3s, color 0.3s;
+        }
 
+        .card-body a:hover {
+            background-color: #85a3e0; /* 懸停時的背景色 */
+            color: #e6e6e6; /* 懸停時的文字顏色 */
+        }
         .card-title {
             font-size: 18px;
             font-weight: bold;
@@ -231,10 +245,10 @@ foreach ($categories as $category) {
         </a>
         <?php if ($is_admin): ?>
             <a href="management.php">
-                product management
+                <img src="manage.png" alt="Manage" title="Manage">
             </a>
             <a href="orderpage.php">
-                orders
+                <img src="order.png" alt="Order" title="Order">
             </a>
         <?php endif; ?>
     </div>
