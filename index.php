@@ -1,28 +1,4 @@
 <?php
-function check_login($con)
-{
-    if (isset($_SESSION['member_id'])) {
-        $id = $_SESSION['member_id'];
-        $query = "SELECT * FROM member WHERE member_id = '$id' LIMIT 1";
-        $result = mysqli_query($con, $query);
-        if ($result && mysqli_num_rows($result) > 0) {
-            $member_data = mysqli_fetch_assoc($result);
-            return $member_data;
-        }
-    }
-
-    // Redirect to login
-    header("Location: login.php");
-    die;
-}
-
-function is_admin($con, $member_id) {
-    // Check if the user is in the admin table and has tier >= 1
-    $query = "SELECT tier FROM admin WHERE member_id = '$member_id' AND tier >= 1";
-    $result = mysqli_query($con, $query);
-    return $result && mysqli_num_rows($result) > 0;
-}
-
 session_start();
 include("connection.php");
 
@@ -246,7 +222,10 @@ foreach ($categories as $category) {
         </a>
         <?php if ($is_admin): ?>
             <a href="management.php">
-                <img src="manage.png" alt="Management" title="Management">
+                product management
+            </a>
+            <a href="orderpage.php">
+                orders
             </a>
         <?php endif; ?>
     </div>

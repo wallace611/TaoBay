@@ -36,6 +36,7 @@ CREATE TABLE `admin` (
 
 LOCK TABLES `admin` WRITE;
 /*!40000 ALTER TABLE `admin` DISABLE KEYS */;
+INSERT INTO `admin` VALUES (0,3);
 /*!40000 ALTER TABLE `admin` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -88,7 +89,7 @@ CREATE TABLE `category` (
 
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
-INSERT INTO `category` VALUES (1,'nice','product1-4.jpg','good');
+INSERT INTO `category` VALUES (0,'234',NULL,'234'),(1,'nice','product1-4.jpg','good');
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -142,7 +143,7 @@ CREATE TABLE `member` (
 
 LOCK TABLES `member` WRITE;
 /*!40000 ALTER TABLE `member` DISABLE KEYS */;
-INSERT INTO `member` VALUES (0,'admin','123456789','admin','$2y$10$Fit.HgZAnHQG9drECFI4rumSLrdNLZepf4bkJ4bcxkj7cdd6m4zHO');
+INSERT INTO `member` VALUES (1,'admin','123456789','admin','$2y$10$Fit.HgZAnHQG9drECFI4rumSLrdNLZepf4bkJ4bcxkj7cdd6m4zHO'),(2,'a','123','w@gmail.com','$2y$10$W0ZKAfURd6C6Y/OqzvtQJOipWzHhcE06UEEQKxCv.D3JrRy5Sa1cS');
 /*!40000 ALTER TABLE `member` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -203,7 +204,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,1,'poop','this is a poop','product1-1.jpg',100,20),(2,1,'shit','not poop but shit','product1-2.jpg',100,30);
+INSERT INTO `product` VALUES (1,1,'poop','this is a poop','product1-1.jpg',100,20),(2,1,'shit','not poop but shit','product1-2.jpg',100,30),(5,0,'www','wwww',NULL,1213,12),(6,1,'23423','1234',NULL,23423423,23423423),(7,0,'wallace','www',NULL,12313,123);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -216,4 +217,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-18 10:45:46
+-- Dump completed on 2024-12-18 11:35:42

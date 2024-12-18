@@ -35,27 +35,33 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $category_id = $_POST['category_id'];
         $price = $_POST['price'];
         $quantity = $_POST['quantity'];
-
+    
         // 檢查並處理圖片
         if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-            $image_path = "uploads/" . basename($_FILES["image"]["name"]);
+            // 獲取最大 product_id 並加 1
+            $stmt = $pdo->query("SELECT MAX(product_id) AS max_id FROM product");
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $product_id = $result['max_id'] + 1;
+    
+            // 設定圖片儲存的目錄及檔案名稱，使用 p_{product_id} 命名
+            $image_dir = "image/"; // 修改為 'image/' 資料夾
+            $image_name = "p_" . $product_id . ".jpg"; // 使用 p_{id} 命名
+            $image_path = $image_dir . $image_name;
+    
+            // 移動上傳的檔案到指定目錄
             move_uploaded_file($_FILES["image"]["tmp_name"], $image_path);
         } else {
             $image_path = null;
         }
-
-        // 獲取最大 product_id 並加 1
-        $stmt = $pdo->query("SELECT MAX(product_id) AS max_id FROM product");
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        $product_id = $result['max_id'] + 1;
-
+    
         // 插入新商品
         $stmt = $pdo->prepare("INSERT INTO product (product_id, category_id, name, description, image_path, quantity, price) VALUES (?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([$product_id, $category_id, $name, $description, $image_path, $quantity, $price]);
-
+    
         header("Location: management.php");
         exit;
     }
+    
 
     if (isset($_POST['action']) && $_POST['action'] == "edit") {
         // 編輯商品
@@ -74,27 +80,33 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         }
     }
 
-    if ($_POST['action'] == "add_category") {
+    if (isset($_POST['action']) && $_POST['action'] == "add_category") {
+        // 新增商品類別
         if (isset($_POST['category_name'], $_POST['category_description'])) {
             $category_name = $_POST['category_name'];
             $category_description = $_POST['category_description'];
     
-            // Check if category image exists
+            // 檢查並處理類別圖片
             if (isset($_FILES['category_image']) && $_FILES['category_image']['error'] == 0) {
-                $image_path = "uploads/categories/" . basename($_FILES["category_image"]["name"]);
-                move_uploaded_file($_FILES["category_image"]["tmp_name"], $image_path);
+                // 獲取最大 category_id 並加 1
+                $stmt = $pdo->query("SELECT MAX(category_id) AS max_id FROM category");
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                $new_category_id = $result['max_id'] + 1;
+    
+                // 設定類別圖片儲存的目錄及檔案名稱，使用 c_{category_id} 命名
+                $category_image_dir = "image/"; // 修改為 'image/' 資料夾
+                $category_image_name = "c_" . $new_category_id . ".jpg"; // 使用 c_{id} 命名
+                $category_image_path = $category_image_dir . $category_image_name;
+    
+                // 移動上傳的檔案到指定目錄
+                move_uploaded_file($_FILES["category_image"]["tmp_name"], $category_image_path);
             } else {
-                $image_path = null;
+                $category_image_path = null;
             }
     
-            // Get the maximum category_id from the database and increment it by 1
-            $stmt = $pdo->query("SELECT MAX(category_id) AS max_id FROM category");
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            $new_category_id = $result['max_id'] + 1;
-    
-            // Insert the new category with the new category_id
+            // 插入新類別
             $stmt = $pdo->prepare("INSERT INTO category (category_id, name, description, image_path) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$new_category_id, $category_name, $category_description, $image_path]);
+            $stmt->execute([$new_category_id, $category_name, $category_description, $category_image_path]);
     
             header("Location: management.php");
             exit;
