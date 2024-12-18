@@ -8,6 +8,8 @@ if (!$product_id) {
     die("未提供商品 ID");
 }
 
+$is_admin = is_admin($con, $_SESSION['member_id']);
+
 // 查詢商品詳細資料
 try {
     $stmt = $pdo->prepare("SELECT * FROM product WHERE product_id = :product_id");
@@ -298,23 +300,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
         <h1>TaoBay</h1>
         <div class="header-links">
             <a href="checkout3.php">
-                <img src="cart.png" alt="Shopping Cart" title="Shopping Cart">
+                <img src="../image/cart.png" alt="Shopping Cart" title="Shopping Cart">
             </a>
-            <a href="memberpage.php">
-                <img src="person.png" alt="Member Page" title="Member Page">
+            <a href="../account/memberpage.php">
+                <img src="../image/person.png" alt="Member Page" title="Member Page">
             </a>
-            <a href="logout.php">
-                <img src="logout.png" alt="Logout" title="Logout">
+            <a href="../account/logout.php">
+                <img src="../image/logout.png" alt="Logout" title="Logout">
             </a>
-            <a href="index.php">
-                <img src="home.png" alt="Home" title="Home">
+            <a href="../index.php">
+                <img src="../image/home.png" alt="Home" title="Home">
             </a>
             <?php if ($is_admin): ?>
-                <a href="management.php">
-                    <img src="manage.png" alt="Manage" title="Manage">
+                <a href="../admin/management.php">
+                    <img src="../image/manage.png" alt="Manage" title="Manage">
                 </a>
-                <a href="orderpage.php">
-                    <img src="order.png" alt="Order" title="Order">
+                <a href="../admin/orderpage.php">
+                    <img src="../image/order.png" alt="Order" title="Order">
                 </a>
             <?php endif; ?>
         </div>
