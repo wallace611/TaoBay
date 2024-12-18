@@ -36,7 +36,7 @@ CREATE TABLE `admin` (
 
 LOCK TABLES `admin` WRITE;
 /*!40000 ALTER TABLE `admin` DISABLE KEYS */;
-INSERT INTO `admin` VALUES (0,3),(1,3);
+INSERT INTO `admin` VALUES (0,3),(1,3),(0,3),(1,3);
 /*!40000 ALTER TABLE `admin` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -64,7 +64,7 @@ CREATE TABLE `cart` (
 
 LOCK TABLES `cart` WRITE;
 /*!40000 ALTER TABLE `cart` DISABLE KEYS */;
-INSERT INTO `cart` VALUES (1,NULL,1,1),(2,NULL,1,0);
+INSERT INTO `cart` VALUES (1,NULL,1,1),(2,NULL,1,0),(3,NULL,3,1),(4,NULL,3,1),(5,NULL,3,1),(6,NULL,3,0);
 /*!40000 ALTER TABLE `cart` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -90,7 +90,7 @@ CREATE TABLE `category` (
 
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
-INSERT INTO `category` VALUES (1,'手機殼','image/c_1.jpg','手機殼喔');
+INSERT INTO `category` VALUES (1,'手機殼','image/c_1.jpg','手機殼喔'),(2,'飾品','image/c_2.jpg','非常漂亮');
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -118,7 +118,7 @@ CREATE TABLE `contains` (
 
 LOCK TABLES `contains` WRITE;
 /*!40000 ALTER TABLE `contains` DISABLE KEYS */;
-INSERT INTO `contains` VALUES (1,3,1),(1,4,1);
+INSERT INTO `contains` VALUES (1,3,1),(3,3,6),(3,1,5),(4,3,1);
 /*!40000 ALTER TABLE `contains` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -145,7 +145,7 @@ CREATE TABLE `member` (
 
 LOCK TABLES `member` WRITE;
 /*!40000 ALTER TABLE `member` DISABLE KEYS */;
-INSERT INTO `member` VALUES (1,'admin','123456789','admin','$2y$10$Fit.HgZAnHQG9drECFI4rumSLrdNLZepf4bkJ4bcxkj7cdd6m4zHO'),(2,'a','123','w@gmail.com','$2y$10$W0ZKAfURd6C6Y/OqzvtQJOipWzHhcE06UEEQKxCv.D3JrRy5Sa1cS');
+INSERT INTO `member` VALUES (1,'admin','123456789','admin','$2y$10$Fit.HgZAnHQG9drECFI4rumSLrdNLZepf4bkJ4bcxkj7cdd6m4zHO'),(2,'a','123','w@gmail.com','$2y$10$W0ZKAfURd6C6Y/OqzvtQJOipWzHhcE06UEEQKxCv.D3JrRy5Sa1cS'),(3,'蔡佩頴','0965065622','tinatina62027@gmail.com','$2y$10$uTYx8Vah1YUZXZ2anDokzetNk34sSRWzI2JGFghePfmJWKfHBCN3u');
 /*!40000 ALTER TABLE `member` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -179,6 +179,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+INSERT INTO `orders` VALUES (1,'待出貨','貨到付款',1700.00,'123','2024-12-18 22:25:46',3,3),(2,'待出貨','貨到付款',200.00,'123','2024-12-18 22:35:02',3,4),(3,'待出貨','貨到付款',0.00,'123','2024-12-18 22:36:22',3,5);
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -209,7 +210,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,1,'手機殼1','超讚','image/p_1.jpg',200,100),(2,1,'手機殼2','更讚','image/p_2.jpg',300,100),(3,1,'手機殼3','超讚的','image/p_3.jpg',100,200),(4,1,'手機殼 終極版','????','image/p_4.jpg',10,1000);
+INSERT INTO `product` VALUES (1,1,'手機殼1','超讚','image/p_1.jpg',195,100),(2,1,'手機殼2','更讚','image/p_2.jpg',300,100),(3,1,'手機殼3','超讚的','image/p_3.jpg',93,200),(5,2,'精緻約會項鍊','戴了就會脫單','image/p_5.jpg',20,300),(6,2,'易碎之花戒指','很容易破碎','image/p_6.jpg',10,340),(7,2,'訴說心語手鍊','戴上它會開始講心事','image/p_7.jpg',5,500),(8,2,'生命之花耳環','非常有生命力','image/p_8.jpg',60,800);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -222,4 +223,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-18 20:43:57
+-- Dump completed on 2024-12-19  1:56:03
