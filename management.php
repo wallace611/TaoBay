@@ -118,14 +118,32 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     
 
     if (isset($_POST['action']) && $_POST['action'] == "delete") {
-        // 刪除商品
         $product_id = $_POST['product_id'];
-        $stmt = $pdo->prepare("DELETE FROM product WHERE product_id = ?");
-        $stmt->execute([$product_id]);
-
-        header("Location: management.php");
-        exit;
+    
+        try {
+            // 開啟交易
+            $pdo->beginTransaction();
+    
+            // 刪除 contains 表中與該產品相關的記錄
+            $stmt = $pdo->prepare("DELETE FROM contains WHERE product_id = ?");
+            $stmt->execute([$product_id]);
+    
+            // 刪除 product 表中的產品
+            $stmt = $pdo->prepare("DELETE FROM product WHERE product_id = ?");
+            $stmt->execute([$product_id]);
+    
+            // 提交交易
+            $pdo->commit();
+    
+            header("Location: management.php");
+            exit;
+        } catch (PDOException $e) {
+            // 發生錯誤回滾交易
+            $pdo->rollBack();
+            die("刪除失敗：" . $e->getMessage());
+        }
     }
+    
 
     if (isset($_POST['action']) && $_POST['action'] == "delete_category") {
         // 刪除類別
