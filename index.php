@@ -1,44 +1,43 @@
 <?php
-
 function check_login($con)
 {
+    if (isset($_SESSION['member_id'])) {
+        $id = $_SESSION['member_id'];
+        $query = "SELECT * FROM member WHERE member_id = '$id' LIMIT 1";
+        $result = mysqli_query($con, $query);
+        if ($result && mysqli_num_rows($result) > 0) {
+            $member_data = mysqli_fetch_assoc($result);
+            return $member_data;
+        }
+    }
 
-	if(isset($_SESSION['member_id']))
-	{
-
-		$id = $_SESSION['member_id'];
-		$query = "select * from member where member_id = '$id' limit 1";
-
-		$result = mysqli_query($con,$query);
-		if($result && mysqli_num_rows($result) > 0)
-		{
-
-			$member_data = mysqli_fetch_assoc($result);
-			return $member_data;
-		}
-	}
-
-	//redirect to login
-	header("Location: login.php");
-	die;
-
+    // Redirect to login
+    header("Location: login.php");
+    die;
 }
-?>
 
-<?php 
+function is_admin($con, $member_id) {
+    // Check if the user is in the admin table and has tier >= 1
+    $query = "SELECT tier FROM admin WHERE member_id = '$member_id' AND tier >= 1";
+    $result = mysqli_query($con, $query);
+    return $result && mysqli_num_rows($result) > 0;
+}
+
 session_start();
+include("connection.php");
 
-	include("connection.php");
+$member_data = check_login($con);
 
-	$member_data = check_login($con);
+// Check if the current user is an admin with tier >= 1
+$is_admin = is_admin($con, $member_data['member_id']);
 
-// 讀取分類和商品
+// Load categories and products
 try {
-    // 查詢所有分類
+    // Query categories
     $categoryStmt = $pdo->query("SELECT * FROM category");
     $categories = $categoryStmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // 查詢每個分類的商品
+    // Query products for each category
     foreach ($categories as &$category) {
         $categoryId = $category['category_id'];
         $productStmt = $pdo->prepare("SELECT * FROM product WHERE category_id = ?");
@@ -48,6 +47,30 @@ try {
 } catch (PDOException $e) {
     die("讀取資料失敗：" . $e->getMessage());
 }
+// Fetch all categories and their associated products
+$query = "
+    SELECT c.*, p.* 
+    FROM category c
+    LEFT JOIN product p ON c.category_id = p.category_id
+    ORDER BY c.category_id
+";
+$stmt = $pdo->query($query);
+$categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Organize products by category
+$categoryProducts = [];
+foreach ($categories as $category) {
+    $categoryProducts[$category['category_id']]['name'] = $category['name'];
+    $categoryProducts[$category['category_id']]['image_path'] = $category['image_path'];
+    $categoryProducts[$category['category_id']]['products'][] = [
+        'product_id' => $category['product_id'],
+        'name' => $category['name'],
+        'description' => $category['description'],
+        'price' => $category['price'],
+        'image_path' => $category['image_path']
+    ];
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -221,6 +244,11 @@ try {
         <a href="logout.php">
             <img src="logout.png" alt="Logout" title="Logout">
         </a>
+        <?php if ($is_admin): ?>
+            <a href="management.php">
+                <img src="manage.png" alt="Management" title="Management">
+            </a>
+        <?php endif; ?>
     </div>
 </header>
 
@@ -231,37 +259,38 @@ try {
     </div>
     <h1>商品列表</h1>
     <div class="container">
-        <?php if (!empty($categories)): ?>
-            <?php foreach ($categories as $category): ?>
-                <div class="category">
-                    <div class="category-header">
-                        <img src="<?php echo htmlspecialchars($category['image_path'] ?? 'https://via.placeholder.com/250x150.png?text=No+Image'); ?>" 
-                             alt="<?php echo htmlspecialchars($category['name']); ?>">
-                    </div>
-                    <div class="product-list">
-                        <?php if (!empty($category['products'])): ?>
-                            <?php foreach (array_slice($category['products'], 0, 4) as $product): ?>
-                                <div class="card">
-                                    <img src="<?php echo htmlspecialchars($product['image_path'] ?? 'https://via.placeholder.com/250x150.png?text=Product+Image'); ?>" 
-                                         alt="<?php echo htmlspecialchars($product['name']); ?>">
-                                    <div class="card-body">
-                                        <div class="card-title"><?php echo htmlspecialchars($product['name']); ?></div>
-                                        <div class="card-description"><?php echo htmlspecialchars($product['description']); ?></div>
-                                        <div class="card-price">NTD <?php echo htmlspecialchars(number_format($product['price'], 2)); ?></div>
-                                        <a href="product.php?product_id=<?php echo htmlspecialchars($product['product_id']); ?>">查看商品</a>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <p style="text-align: center;">此類別目前沒有商品。</p>
-                        <?php endif; ?>
-                    </div>
+    <?php if (!empty($categoryProducts)): ?>
+        <?php foreach ($categoryProducts as $category_id => $category_data): ?>
+            <div class="category">
+                <div class="category-header">
+                    <img src="<?php echo htmlspecialchars($category_data['image_path'] ?? 'https://via.placeholder.com/250x150.png?text=No+Image'); ?>" 
+                         alt="<?php echo htmlspecialchars($category_data['name']); ?>">
                 </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p style="text-align: center;">目前沒有商品分類。</p>
-        <?php endif; ?>
-    </div>
+                <div class="product-list">
+                    <?php if (!empty($category_data['products'])): ?>
+                        <?php foreach (array_slice($category_data['products'], 0, 4) as $product): ?>
+                            <div class="card">
+                                <img src="<?php echo htmlspecialchars($product['image_path'] ?? 'https://via.placeholder.com/250x150.png?text=Product+Image'); ?>" 
+                                     alt="<?php echo htmlspecialchars($product['name']); ?>">
+                                <div class="card-body">
+                                    <div class="card-title"><?php echo htmlspecialchars($product['name']); ?></div>
+                                    <div class="card-description"><?php echo htmlspecialchars($product['description']); ?></div>
+                                    <div class="card-price">NTD <?php echo htmlspecialchars(number_format($product['price'], 2)); ?></div>
+                                    <a href="product.php?product_id=<?php echo htmlspecialchars($product['product_id']); ?>">查看商品</a>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p style="text-align: center;">此類別目前沒有商品。</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p style="text-align: center;">目前沒有商品分類。</p>
+    <?php endif; ?>
+</div>
+
     <footer>
         <p>&copy; 2024 TaoBay</p>
     </footer>

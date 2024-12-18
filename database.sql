@@ -16,6 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `admin`
+--
+
+DROP TABLE IF EXISTS `admin`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `admin` (
+  `member_id` int(11) NOT NULL,
+  `tier` int(11) NOT NULL,
+  KEY `member_id` (`member_id`),
+  CONSTRAINT `admin_ibfk_1` FOREIGN KEY (`member_id`) REFERENCES `member` (`member_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `admin`
+--
+
+LOCK TABLES `admin` WRITE;
+/*!40000 ALTER TABLE `admin` DISABLE KEYS */;
+/*!40000 ALTER TABLE `admin` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `cart`
 --
 
@@ -64,9 +88,7 @@ CREATE TABLE `category` (
 
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
-
-INSERT INTO `category` VALUES (1, 'nice',"product1-4.jpg",'good');
-
+INSERT INTO `category` VALUES (1,'nice','product1-4.jpg','good');
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -81,6 +103,8 @@ CREATE TABLE `contains` (
   `cart_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
+  KEY `contains_ibfk_1` (`cart_id`),
+  KEY `contains_ibfk_2` (`product_id`),
   CONSTRAINT `contains_ibfk_1` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`cart_id`),
   CONSTRAINT `contains_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -118,7 +142,7 @@ CREATE TABLE `member` (
 
 LOCK TABLES `member` WRITE;
 /*!40000 ALTER TABLE `member` DISABLE KEYS */;
-INSERT INTO `member` VALUES (6359,'ulittleshit','123456789','123','$2y$10$bBXG2uRksdnEYM7YCKsoZu0ywT949SVIlyQVvdDQIjRyZLVwzpr.m');
+INSERT INTO `member` VALUES (0,'admin','123456789','admin','$2y$10$Fit.HgZAnHQG9drECFI4rumSLrdNLZepf4bkJ4bcxkj7cdd6m4zHO');
 /*!40000 ALTER TABLE `member` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -166,9 +190,10 @@ CREATE TABLE `product` (
   `description` varchar(100) DEFAULT NULL,
   `image_path` varchar(100) DEFAULT NULL,
   `quantity` int(11) DEFAULT NULL,
-  `price` decimal(10) DEFAULT NULL,
+  `price` decimal(10,0) DEFAULT NULL,
   PRIMARY KEY (`product_id`),
-  FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`)
+  KEY `category_id` (`category_id`),
+  CONSTRAINT `product_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -178,7 +203,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1, 1,'poop','this is a poop',"product1-1.jpg",100,20.00),(2, 1,'shit','not poop but shit',"product1-2.jpg",100,30.00);
+INSERT INTO `product` VALUES (1,1,'poop','this is a poop','product1-1.jpg',100,20),(2,1,'shit','not poop but shit','product1-2.jpg',100,30);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -191,4 +216,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-14 23:39:53
+-- Dump completed on 2024-12-18 10:45:46

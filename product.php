@@ -101,6 +101,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
     <link href="style.css" rel="stylesheet">
 </head>
 <body>
+    <div class="welcome-message">
+        Hello, <?php echo htmlspecialchars($member_data['name']); ?>
+    </div>
     <div class="product-container">
         <img src="<?php echo htmlspecialchars($product['image_path'] ?? 'https://via.placeholder.com/250x150.png?text=No+Image'); ?>" 
         alt="<?php echo htmlspecialchars($product['name']); ?>">
