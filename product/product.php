@@ -1,12 +1,6 @@
 <?php
 session_start();
-<<<<<<< HEAD:product/product.php
 include("../connection.php");
-=======
-include("connection.php");
-$member_data = check_login($con);
-$is_admin = is_admin($con, $member_data['member_id']);
->>>>>>> 00d6fb1b1727055cd59e286990a8b26f48f96f84:product.php
 
 // 取得商品 ID
 $product_id = $_GET['product_id'] ?? null;
