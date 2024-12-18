@@ -1,7 +1,7 @@
 <?php
 session_start();
 // 引入資料庫配置
-include("connection.php");
+include("../connection.php");
 
 // 檢查是否有登入用戶（例如 session 檢查），如未登入則導向至登入頁
 if (!isset($_SESSION['member_id'])) {
@@ -36,7 +36,7 @@ try {
 <body>
     <h1>我的訂單</h1>
     
-    <a href="index.php">返回首頁</a>
+    <a href="../index.php">返回首頁</a>
     <a href="checkout3.php">回購物車</a>
 
     <?php if ($orders): ?>
@@ -78,7 +78,7 @@ try {
                                     <td><?php echo htmlspecialchars($product['product_name']); ?></td>
                                     <td>
                                         <!-- 顯示商品圖片 -->
-                                        <img src="<?php echo htmlspecialchars($product['image_path']); ?>" alt="<?php echo htmlspecialchars($product['product_name']); ?>" width="100">
+                                        <img src="<?php echo htmlspecialchars('../' . $product['image_path']); ?>" alt="<?php echo htmlspecialchars($product['product_name']); ?>" width="100">
                                     </td>
                                     <td><?php echo htmlspecialchars($product['quantity']); ?></td>
                                     <td><?php echo htmlspecialchars($product['price']); ?> 元</td>

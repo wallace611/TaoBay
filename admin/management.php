@@ -1,10 +1,10 @@
 <?php
 session_start();
-include("connection.php");
+include("../connection.php");
 
 // 檢查使用者是否登入
 if (!isset($_SESSION['member_id'])) {
-    header("Location: login.php");
+    header("Location: ../account/login.php");
     exit;
 }
 
@@ -22,7 +22,7 @@ if ($admin_data && $admin_data['tier'] >= 1) {
 }
 
 if (!$isAdmin) {
-    header("Location: index.php");
+    header("Location: ../index.php");
     exit;
 }
 
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     if (isset($_POST['action']) && $_POST['action'] == "add_category") {
         // 新增商品類別
-        if (isset($_POST['category_name'], $_POST['category_description'])) {
+        if (isset($_POST['category_name'])) {
             $category_name = $_POST['category_name'];
             $category_description = $_POST['category_description'];
     
@@ -177,12 +177,11 @@ $products = $pdo->query("SELECT p.*, c.name AS category_name FROM product p LEFT
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>商品管理</title>
-    <link href="style.css" rel="stylesheet">
 </head>
 <body>
 <header>
     <h1>商品管理</h1>
-    <a href="index.php">返回首頁</a>
+    <a href="../index.php">返回首頁</a>
 </header>
 <main>
     <h2>新增商品</h2>
@@ -228,7 +227,7 @@ $products = $pdo->query("SELECT p.*, c.name AS category_name FROM product p LEFT
             <tr>
                 <td><?php echo htmlspecialchars($category['name']); ?></td>
                 <td><?php echo htmlspecialchars($category['description']); ?></td>
-                <td><img src="<?php echo htmlspecialchars($category['image_path']); ?>" alt="類別圖片" width="50"></td>
+                <td><img src="<?php echo htmlspecialchars('../' . $category['image_path']); ?>" alt="類別圖片" width="50"></td>
                 <td>
                     <form method="POST" style="display:inline;">
                         <input type="hidden" name="action" value="delete_category">
@@ -264,7 +263,7 @@ $products = $pdo->query("SELECT p.*, c.name AS category_name FROM product p LEFT
                 <td><?php echo htmlspecialchars($product['category_name']); ?></td>
                 <td><?php echo htmlspecialchars($product['price']); ?></td>
                 <td><?php echo htmlspecialchars($product['quantity']); ?></td>
-                <td><img src="<?php echo htmlspecialchars($product['image_path']); ?>" alt="商品圖片" width="50"></td>
+                <td><img src="<?php echo htmlspecialchars('../' . $product['image_path']); ?>" alt="商品圖片" width="50"></td>
                 <td>
                     <form method="POST" style="display:inline;">
                         <input type="hidden" name="action" value="edit">

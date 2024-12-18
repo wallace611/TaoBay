@@ -1,17 +1,17 @@
 <?php 
 session_start();
 
-	include("connection.php");
+	include("../connection.php");
 	$error_message = ""; // 初始化錯誤訊息
 	if(isset($_SESSION['member_id'])) {
 		// Redirect to another page, e.g., the homepage
-		header("Location: index.php");
+		header("Location: ../index.php");
 		die;
 	}
 
 // 檢查是否已登入，若是則重定向
 if (isset($_SESSION['member_id'])) {
-    header("Location: index.php");
+    header("Location: ../index.php");
     exit;
 }
 

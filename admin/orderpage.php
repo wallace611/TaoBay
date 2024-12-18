@@ -1,11 +1,11 @@
 <?php
 session_start();
 // 引入資料庫配置
-include("connection.php");
+include("../connection.php");
 
 // 檢查是否有登入管理員（例如 session 檢查），如未登入則導向至登入頁
 if (!is_admin($con, $_SESSION['member_id'])) {
-    header("Location: login.php");
+    header("Location: ../account/login.php");
     exit;
 }
 
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <h1>訂單管理頁面</h1>
     
-    <a href="index.php">返回首頁</a>
+    <a href="../index.php">返回首頁</a>
     <table border="1" cellpadding="10">
         <thead>
             <tr>
@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <td><?php echo htmlspecialchars($order['checkout_time']); ?></td>
                         <td>
                             <!-- 顯示一個按鈕，跳轉到 cartorder.php -->
-                            <form method="GET" action="cartorder.php" style="display:inline;">
+                            <form method="GET" action="../product/cartorder.php" style="display:inline;">
                                 <input type="hidden" name="order_id" value="<?php echo htmlspecialchars($order['order_id']); ?>">
                                 <button type="submit" name="view_order">查看此訂單商品</button>
                             </form>

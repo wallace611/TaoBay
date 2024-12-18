@@ -2,7 +2,7 @@
 
 session_start();
 
-	include("connection.php");
+	include("../connection.php");
 	$error_message = ""; // 初始化錯誤訊息
 	if(isset($_SESSION['member_id'])) {
 		// Redirect to another page, e.g., the homepage
@@ -32,7 +32,7 @@ session_start();
 				if(password_verify($password, $member_data['password']))
 				{
 					$_SESSION['member_id'] = $member_data['member_id'];
-					header("Location: index.php");
+					header("Location: ../index.php");
 					die;
 				}
 			}

@@ -22,7 +22,7 @@ try {
 } catch (PDOException $e) {
     die("讀取資料失敗：" . $e->getMessage());
 }
-// Fetch all categories and their associated products
+
 $query = "
     SELECT c.*, p.* 
     FROM category c
@@ -30,16 +30,13 @@ $query = "
     ORDER BY c.category_id
 ";
 $stmt = $pdo->query($query);
-//$categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Organize products by category
 $categoryProducts = [];
-foreach ($categories as $category) {
+foreach ($categories as &$category) {
     $categoryId = $category['category_id'];
     $categoryProducts[$categoryId]['name'] = $category['name'];
     $categoryProducts[$categoryId]['image_path'] = $category['image_path'];
 
-    // 檢查是否存在產品
     if (!empty($category['products']) && is_array($category['products'])) {
         foreach ($category['products'] as $product) {
             $categoryProducts[$categoryId]['products'][] = [
@@ -51,9 +48,9 @@ foreach ($categories as $category) {
             ];
         }
     } else {
-        // 若沒有產品，則初始化為空陣列
+        // If no products, initialize as empty array
         $categoryProducts[$categoryId]['products'] = [];
-    }
+    }    
 }
 
 ?>
@@ -66,6 +63,24 @@ foreach ($categories as $category) {
     <title>商品列表</title>
     <link href="style.css" rel="stylesheet">
     <style>
+        .welcome-message {
+            position: absolute;
+            right: 20px;
+            top: 80px;
+            text-align: right; /* 調整文字靠右 */
+            z-index: 10; /* 確保文字位於最上層 */
+        }
+
+        .welcome-box {
+            display: inline-block;
+            background-color: rgba(133, 163, 224, 0.9); /* 淡藍色背景帶透明效果 */
+            color: white;
+            font-size: 18px; /* 字體大小提升 */
+            font-weight: bold; /* 字體加粗 */
+            padding: 8px 15px; /* 添加內間距 */
+            border-radius: 10px; /* 圓角邊框 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 增加陰影效果 */
+        }
         * {
             margin: 0;
             padding: 0;
@@ -220,20 +235,20 @@ foreach ($categories as $category) {
 <header>
     <h1>TaoBay</h1>
     <div class="header-links">
-        <a href="checkout3.php">
-            <img src="cart.png" alt="Shopping Cart" title="Shopping Cart">
+        <a href="product/checkout3.php">
+            <img src="image/cart.png" alt="Shopping Cart" title="Shopping Cart">
         </a>
-        <a href="memberpage.php">
-            <img src="person.png" alt="Member Page" title="Member Page">
+        <a href="account/memberpage.php">
+            <img src="image/person.png" alt="Member Page" title="Member Page">
         </a>
-        <a href="logout.php">
-            <img src="logout.png" alt="Logout" title="Logout">
+        <a href="account/logout.php">
+            <img src="image/logout.png" alt="Logout" title="Logout">
         </a>
         <?php if ($is_admin): ?>
-            <a href="management.php">
+            <a href="admin/management.php">
                 product management
             </a>
-            <a href="orderpage.php">
+            <a href="admin/orderpage.php">
                 orders
             </a>
         <?php endif; ?>
@@ -243,9 +258,11 @@ foreach ($categories as $category) {
 	
 	<br>
 	<div class="welcome-message">
-        Hello, <?php echo htmlspecialchars($member_data['name']); ?>
+        <span class="welcome-box">
+            歡迎回來，<?php echo htmlspecialchars($member_data['name']); ?>
+        </span>
     </div>
-    <h1>商品列表</h1>
+
     <div class="container">
     <?php if (!empty($categoryProducts)): ?>
         <?php foreach ($categoryProducts as $category_id => $category_data): ?>
@@ -256,15 +273,15 @@ foreach ($categories as $category) {
                 </div>
                 <div class="product-list">
                     <?php if (!empty($category_data['products'])): ?>
-                        <?php foreach (array_slice($category_data['products'], 0, 4) as $product): ?>
+                        <?php foreach ($category_data['products'] as $product): ?>
                             <div class="card">
                                 <img src="<?php echo htmlspecialchars($product['image_path'] ?? 'https://via.placeholder.com/250x150.png?text=Product+Image'); ?>" 
-                                     alt="<?php echo htmlspecialchars($product['name']); ?>">
+                                    alt="<?php echo htmlspecialchars($product['name']); ?>">
                                 <div class="card-body">
                                     <div class="card-title"><?php echo htmlspecialchars($product['name']); ?></div>
                                     <div class="card-description"><?php echo htmlspecialchars($product['description']); ?></div>
                                     <div class="card-price">NTD <?php echo htmlspecialchars(number_format($product['price'], 2)); ?></div>
-                                    <a href="product.php?product_id=<?php echo htmlspecialchars($product['product_id']); ?>">查看商品</a>
+                                    <a href="product/product.php?product_id=<?php echo htmlspecialchars($product['product_id']); ?>">查看商品</a>
                                 </div>
                             </div>
                         <?php endforeach; ?>

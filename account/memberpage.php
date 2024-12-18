@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-include("connection.php");
+include("../connection.php");
 $error_message = ""; // 初始化錯誤訊息
 
 // 檢查用戶是否已登入
@@ -217,7 +217,7 @@ if($result->num_rows > 0) {
             <input id="button" type="submit" value="更新">
 
             <div style="display: flex; justify-content: center; align-items: center; margin-top: 10px;">
-                <a href="index.php" style="margin: 0 10px; text-decoration: none; color: #013B64;">回首頁</a>
+                <a href="../index.php" style="margin: 0 10px; text-decoration: none; color: #013B64;">回首頁</a>
                 <span style="color: white;">|</span>
                 <a href="logout.php" style="margin: 0 10px; text-decoration: none; color: #013B64;">登出</a>
             </div>

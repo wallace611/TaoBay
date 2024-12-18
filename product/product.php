@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("connection.php");
+include("../connection.php");
 
 // 取得商品 ID
 $product_id = $_GET['product_id'] ?? null;
@@ -99,10 +99,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>商品詳細資訊</title>
     <link href="style.css" rel="stylesheet">
+    <style>
+        .product-container img {
+            width: 250px; /* 固定圖片寬度 */
+            height: 250px; /* 固定圖片高度 */
+            object-fit: cover; /* 確保圖片比例正常，不變形 */
+            border: 1px solid #ddd; /* 可選：增加邊框 */
+            border-radius: 5px; /* 可選：讓圖片有圓角 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 可選：增加陰影效果 */
+            display: block;
+            margin: 0 auto; /* 居中 */
+        }
+
+        .product-container {
+            text-align: center; /* 圖片與文字居中 */
+            margin: 20px auto; /* 增加外邊距 */
+            max-width: 600px; /* 限制容器寬度 */
+        }
+
+        .product-container .product-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .product-container .product-description,
+        .product-container .product-quantity,
+        .product-container .product-price {
+            margin: 10px 0;
+        }
+
+        .random-products .card img {
+            width: 200px; /* 固定寬度 */
+            height: 200px; /* 固定高度 */
+            object-fit: cover; /* 確保圖片比例正常，不變形 */
+        }
+    </style>
+
 </head>
 <body>
     <div class="product-container">
-        <img src="<?php echo htmlspecialchars($product['image_path'] ?? 'https://via.placeholder.com/250x150.png?text=No+Image'); ?>" 
+        <img src="<?php echo htmlspecialchars('../' . ($product['image_path'] ?? 'images/default.png')); ?>" 
         alt="<?php echo htmlspecialchars($product['name']); ?>">
         <div class="product-title"><?php echo htmlspecialchars($product['name']); ?></div>
         <div class="product-description"><?php echo htmlspecialchars($product['description']); ?></div>
@@ -116,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
         </form>
         
         <br>
-        <a href="index.php" class="add-to-cart-btn">返回主頁面</a>
+        <a href="../index.php" class="add-to-cart-btn">返回主頁面</a>
         <a href="checkout3.php" class="add-to-cart-btn">查看購物車</a>
     </div>
 
@@ -125,7 +162,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
         <div class="container">
             <?php foreach ($random_products as $random_product): ?>
                 <div class="card">
-                    <img src="<?php echo htmlspecialchars($random_product['image_path'] ?? 'https://via.placeholder.com/250x150.png?text=No+Image'); ?>" alt="<?php echo htmlspecialchars($random_product['name']); ?>">
+                        <img src="<?php echo htmlspecialchars('../' . ($random_product['image_path'] ?? 'images/default.png')); ?>" 
+                        alt="<?php echo htmlspecialchars($random_product['name']); ?>">                    
                     <div class="card-body">
                         <div class="card-title"><?php echo htmlspecialchars($random_product['name']); ?></div>
                         <div class="card-price">NTD <?php echo htmlspecialchars(number_format($random_product['price'], 2)); ?></div>
